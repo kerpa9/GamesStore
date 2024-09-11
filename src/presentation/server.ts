@@ -1,4 +1,5 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
+import { AppRoutes } from "./route";
 
 interface Options {
   port: number;
@@ -13,8 +14,18 @@ export class Server {
   }
 
   async start() {
-    this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
+    //Middlewares
+
+    this.app.use(express.json()); //Control of data for response in JSON
+    this.app.use(express.urlencoded({ extended: true })); //Control of data for response in urlencoded
+
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      console.log("object");
+      next();
+    });
+
+    this.app.use("/api/v1", AppRoutes.routes);
+
     this.app.listen(this.port, () => {
       console.log(
         `Server is running on port http://localhost:${this.port} 😊😂🌚`
