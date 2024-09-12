@@ -1,5 +1,5 @@
-import { NextFunction, Router, Response, Request } from "express";
-import { VideogamesRoutes } from "./videogames/route";
+import { Router } from "express";
+import { VideogamesRoutes } from "./routeVideogames";
 
 export class AppRoutes {
   static get routes(): Router {

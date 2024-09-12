@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { VideogamesController } from "./controler";
+import { VideogamesController } from "../controllers/controler";
 
 export class VideogamesRoutes {
   static get routesGames(): Router {
