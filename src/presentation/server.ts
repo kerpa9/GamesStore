@@ -1,16 +1,18 @@
-import express, { NextFunction, Request, Response } from "express";
-import { AppRoutes } from "./route";
+import express, { Router } from "express";
 
 interface Options {
   port: number;
+  routes: Router;
 }
 
 export class Server {
   public readonly app = express();
   private readonly port: number;
+  private readonly routes: Router;
 
   constructor(options: Options) {
     this.port = options.port;
+    this.routes = options.routes;
   }
 
   async start() {
@@ -19,12 +21,7 @@ export class Server {
     this.app.use(express.json()); //Control of data for response in JSON
     this.app.use(express.urlencoded({ extended: true })); //Control of data for response in urlencoded
 
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      console.log("object");
-      next();
-    });
-
-    this.app.use("/api/v1", AppRoutes.routes);
+    this.app.use("/api/v1", this.routes);
 
     this.app.listen(this.port, () => {
       console.log(
