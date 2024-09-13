@@ -1,10 +1,13 @@
 import { Response, Request } from "express";
+import { VideoGamesServices } from "../services/videoGames.Services";
 
 export class VideogamesController {
-  constructor() {}
+  constructor(public readonly videogameService: VideoGamesServices) {}
 
   createVideogames = (req: Request, res: Response) => {
     const { name, price, description } = req.body;
+
+    this.videogameService.createVideoGame("Ho");
 
     return res.status(201).json({ name, price, description });
   };

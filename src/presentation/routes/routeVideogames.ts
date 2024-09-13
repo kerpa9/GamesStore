@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { VideogamesController } from "../controllers/videogames.controller";
+import { VideoGamesServices } from "../services/videoGames.Services";
 
 export class VideogamesRoutes {
   static get routesGames(): Router {
-    const videogamesController = new VideogamesController();
+    const videogamesServices = new VideoGamesServices();
+    const videogamesController = new VideogamesController(videogamesServices);
     const routerGames = Router();
 
     routerGames.post("/", videogamesController.createVideogames);

@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { VideoGameModel } from "./models/videogame.model";
+import { VideoGameModel } from "./models/Videogame.model";
 
 interface Options {
   host: string;
