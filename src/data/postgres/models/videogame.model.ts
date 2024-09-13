@@ -29,7 +29,7 @@ export class VideoGameModel extends BaseEntity {
   description: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     length: 255,
   })
   image: string;

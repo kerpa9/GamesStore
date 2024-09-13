@@ -7,31 +7,59 @@ export class VideogamesController {
   createVideogames = (req: Request, res: Response) => {
     const { name, price, description } = req.body;
 
-    this.videogameService.createVideoGame("Ho");
-
-    return res.status(201).json({ name, price, description });
+    this.videogameService
+      .createVideoGame({ name, price, description })
+      .then((videogame) => {
+        return res.status(201).json(videogame);
+      })
+      .catch((err: any) => {
+        return res.status(500);
+      });
   };
 
   getVideogames = (req: Request, res: Response) => {
-    return res.status(200).json({
-      message: "videogames",
-    });
+    this.videogameService
+      .findAllVideogames()
+      .then((videogames) => {
+        return res.status(200).json(videogames);
+      })
+      .catch((err: any) => {
+        return res.status(500).json(err);
+      });
   };
 
   getVideogamesById = (req: Request, res: Response) => {
     const { id } = req.params;
-    return res.status(200).json({
-      message: "videogames",
-      id,
-    });
+
+    if (isNaN(+id)) {
+      return res.status(400).json({ message: "El id debe ser numero" });
+    }
+    this.videogameService
+      .findOneVideogamesById(+id)
+      .then((videogame) => {
+        return res.status(200).json(videogame);
+      })
+      .catch((err: any) => {
+        return res.status(500).json(err);
+      });
   };
 
   patchVideogame = (req: Request, res: Response) => {
     const { id } = req.params;
-    return res.status(200).json({
-      message: "videogames actualizado",
-      id,
-    });
+    const { name, price, description } = req.body;
+
+    if (isNaN(+id)) {
+      return res.status(400).json({ message: "El id debe ser numero" });
+    }
+    this.videogameService
+      .updateVideogamesById({ name, price, description }, +id)
+      .then((videogame) => {
+        return res.status(200).json(videogame);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
   };
 
   deleteVideogame = (req: Request, res: Response) => {
