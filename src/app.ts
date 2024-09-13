@@ -1,3 +1,4 @@
+import { envs } from "./config/envs";
 import { PostgresDatabase } from "./data";
 import { AppRoutes } from "./presentation/routes/indexRoute";
 import { Server } from "./presentation/server";
@@ -12,16 +13,16 @@ async function main() {
   // postgresql: //videogamedb_owner:erDQlxM4fLc3@ep-tight-resonance-a5lg2m37.us-east-2.aws.neon.tech/videogamedb?sslmode=require
 
   const postgres = new PostgresDatabase({
-    host: "ep-tight-resonance-a5lg2m37.us-east-2.aws.neon.tech",
-    port: 5432,
-    username: "videogamedb_owner",
-    password: "erDQlxM4fLc3",
-    database: "videogamedb",
+    host: envs.DATABASE_HOST,
+    port: envs.DATABASE_PORT,
+    username: envs.DATABASE_USERNAME,
+    password: envs.DATABASE_PASSWORD,
+    database: envs.DATABASE_DATABASE,
   });
 
   await postgres.connect();
   const server = new Server({
-    port: 3000,
+    port: envs.PORT,
     routes: AppRoutes.routes,
   });
   await server.start();

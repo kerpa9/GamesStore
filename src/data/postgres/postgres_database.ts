@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { VideoGameModel } from "./models/videogame.model";
 
 interface Options {
   host: string;
@@ -20,6 +21,7 @@ export class PostgresDatabase {
       password: options.password,
       database: options.database,
       //Entidades
+      entities: [VideoGameModel],
       synchronize: true,
       ssl: {
         rejectUnauthorized: false,
