@@ -62,4 +62,21 @@ export class VideoGamesServices {
       throw new Error("Internal server Error");
     }
   }
+
+  /*
+   *Descripción del metodo delete para un videojuego
+   *@param id: id del videojuego que se quiere eliminar
+   *@returns: Retorna un promesa vacía
+   */
+
+  async deleteVideogames(id: number) {
+    const videogame = await this.findOneVideogamesById(id);
+    videogame.status = Status.INACTIVE;
+    try {
+      await videogame.save();
+      return;
+    } catch (err) {
+      throw new Error("Internal server error");
+    }
+  }
 }
