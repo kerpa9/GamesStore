@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { VideoGamesServices } from "../services/videoGames.Services";
+import { CatchError } from "../../domain";
 
 export class VideogamesController {
   constructor(public readonly videogameService: VideoGamesServices) {}
@@ -13,7 +14,11 @@ export class VideogamesController {
         return res.status(201).json(videogame);
       })
       .catch((err: any) => {
-        return res.status(500);
+        console.log(err);
+        if (err instanceof CatchError) {
+          return res.status(err.statusCode).json({ messsage: err.message });
+        }
+        return res.status(500).json({ message: " something went very wrong" });
       });
   };
 
@@ -24,7 +29,11 @@ export class VideogamesController {
         return res.status(200).json(videogames);
       })
       .catch((err: any) => {
-        return res.status(500).json(err);
+        console.log(err);
+        if (err instanceof CatchError) {
+          return res.status(err.statusCode).json({ messsage: err.message });
+        }
+        return res.status(500).json({ message: " something went very wrong" });
       });
   };
 
@@ -40,7 +49,11 @@ export class VideogamesController {
         return res.status(200).json(videogame);
       })
       .catch((err: any) => {
-        return res.status(500).json(err);
+        console.log(err);
+        if (err instanceof CatchError) {
+          return res.status(err.statusCode).json({ messsage: err.message });
+        }
+        return res.status(500).json({ message: " something went very wrong" });
       });
   };
 
@@ -58,7 +71,10 @@ export class VideogamesController {
       })
       .catch((err: any) => {
         console.log(err);
-        return res.status(500).json(err);
+        if (err instanceof CatchError) {
+          return res.status(err.statusCode).json({ messsage: err.message });
+        }
+        return res.status(500).json({ message: " something went very wrong" });
       });
   };
 
@@ -74,7 +90,10 @@ export class VideogamesController {
         return res.status(204).json();
       })
       .catch((err: any) => {
-        res.status(500).json(err);
+        if (err instanceof CatchError) {
+          return res.status(err.statusCode).json({ messsage: err.message });
+        }
+        return res.status(500).json({ message: " something went very wrong" });
       });
   };
 }

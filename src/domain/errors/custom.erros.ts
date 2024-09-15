@@ -1,5 +1,8 @@
 export class CatchError extends Error {
-  constructor(public readonly message: string, public readonly status: number) {
+  constructor(
+    public readonly message: string,
+    public readonly statusCode: number
+  ) {
     super(message);
   }
   static badRequest(message: string) {

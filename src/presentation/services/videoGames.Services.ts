@@ -1,4 +1,5 @@
 import { VideoGameModel } from "../../data";
+import { CatchError } from "../../domain/errors/custom.erros";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -8,47 +9,65 @@ enum Status {
 export class VideoGamesServices {
   constructor() {}
 
+  /*
+   *Descripción del metodo create para un videojuego
+   *@title: title desde el req.body
+   *@description: description desde el req.body
+   *@price: price desde el req.bosy
+   *@returns: Retorna el guardado de la información
+   */
+
   async createVideoGame(videogameData: any) {
     // Services
     // 1. Obtener los datos desde el body
     // 2. Crear el videojuego
+    const videogame = new VideoGameModel();
+    videogame.title = videogameData.name.toLowerCase().trim();
+    videogame.description = videogameData.description.toLowerCase().trim();
+    videogame.price = videogameData.price;
     try {
-      const videogame = new VideoGameModel();
-      videogame.title = videogameData.name.toLowerCase().trim();
-      videogame.description = videogameData.description.toLowerCase().trim();
-      videogame.price = videogameData.price;
-
-      await videogame.save();
-
-      return videogame;
+      return await videogame.save();
     } catch (err: any) {
-      console.log(err);
+      throw CatchError.internalServer("Something went very wrong!  🧨🧨");
     }
     // 3. retornar el video juego
   }
+
+  /*
+   *Descripción del metodo find all para videojuegos
+   *@returns: Retorna toda la inforamción guardada en la ruta
+   */
 
   async findAllVideogames() {
     try {
       return await VideoGameModel.find({ where: { status: Status.ACTIVE } });
     } catch (err: any) {
-      console.log(err);
+      throw CatchError.internalServer("Something went very wrong!  🧨🧨");
     }
   }
 
+  /*
+   *Descripción del metodo find one para un videojuego
+   *@param id: id del videojuego que se quiere buscar
+   *@returns: Retorna el videojuego con el id indicado
+   */
+
   async findOneVideogamesById(id: number) {
-    try {
-      const videogame = await VideoGameModel.findOne({
-        // return await VideoGameModel.findOne({
-        where: { id, status: Status.ACTIVE },
-      });
-      if (!videogame) {
-        throw new Error("El video juego no existe");
-      }
-      return videogame;
-    } catch (err: any) {
-      throw new Error("Internal server Error");
+    const videogame = await VideoGameModel.findOne({
+      where: { id, status: Status.ACTIVE },
+    });
+    if (!videogame) {
+      throw CatchError.notFound(`This ${id} not found`);
     }
+    return videogame;
   }
+
+  /*
+   *Descripción del metodo find one para un videojuego
+   *@param id: id del videojuego que se quiere buscar
+   *@returns: Retorna el videojuego con el id indicado
+   */
+
   async updateVideogamesById(videogameData: any, id: number) {
     const videogame = await this.findOneVideogamesById(id);
     videogame.title = videogameData.name.toLowerCase().trim();
@@ -59,7 +78,7 @@ export class VideoGamesServices {
       await videogame.save();
       return videogame;
     } catch (err: any) {
-      throw new Error("Internal server Error");
+      throw CatchError.internalServer("Something went very wrong!  🧨🧨");
     }
   }
 
@@ -76,7 +95,7 @@ export class VideoGamesServices {
       await videogame.save();
       return;
     } catch (err) {
-      throw new Error("Internal server error");
+      throw CatchError.internalServer("Something went very wrong!  🧨🧨");
     }
   }
 }
