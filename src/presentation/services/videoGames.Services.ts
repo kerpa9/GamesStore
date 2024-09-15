@@ -9,7 +9,7 @@ enum Status {
 export class VideoGamesServices {
   constructor() {}
 
-  /*
+  /**
    *Descripción del metodo create para un videojuego
    *@title: title desde el req.body
    *@description: description desde el req.body
@@ -33,7 +33,7 @@ export class VideoGamesServices {
     // 3. retornar el video juego
   }
 
-  /*
+  /**
    *Descripción del metodo find all para videojuegos
    *@returns: Retorna toda la inforamción guardada en la ruta
    */
@@ -46,7 +46,7 @@ export class VideoGamesServices {
     }
   }
 
-  /*
+  /**
    *Descripción del metodo find one para un videojuego
    *@param id: id del videojuego que se quiere buscar
    *@returns: Retorna el videojuego con el id indicado
@@ -62,7 +62,7 @@ export class VideoGamesServices {
     return videogame;
   }
 
-  /*
+  /**
    *Descripción del metodo find one para un videojuego
    *@param id: id del videojuego que se quiere buscar
    *@returns: Retorna el videojuego con el id indicado
@@ -82,7 +82,7 @@ export class VideoGamesServices {
     }
   }
 
-  /*
+  /**
    *Descripción del metodo delete para un videojuego
    *@param id: id del videojuego que se quiere eliminar
    *@returns: Retorna un promesa vacía

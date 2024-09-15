@@ -5,36 +5,28 @@ import { CatchError } from "../../domain";
 export class VideogamesController {
   constructor(public readonly videogameService: VideoGamesServices) {}
 
+  private handleError = (err: any, res: Response) => {
+    console.log(err);
+    if (err instanceof CatchError) {
+      return res.status(err.statusCode).json({ messsage: err.message });
+    }
+    return res.status(500).json({ message: " something went very wrong" });
+  };
+
   createVideogames = (req: Request, res: Response) => {
     const { name, price, description } = req.body;
 
     this.videogameService
       .createVideoGame({ name, price, description })
-      .then((videogame) => {
-        return res.status(201).json(videogame);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        if (err instanceof CatchError) {
-          return res.status(err.statusCode).json({ messsage: err.message });
-        }
-        return res.status(500).json({ message: " something went very wrong" });
-      });
+      .then((videogame) => res.status(201).json(videogame))
+      .catch((err: any) => this.handleError(err, res));
   };
 
   getVideogames = (req: Request, res: Response) => {
     this.videogameService
       .findAllVideogames()
-      .then((videogames) => {
-        return res.status(200).json(videogames);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        if (err instanceof CatchError) {
-          return res.status(err.statusCode).json({ messsage: err.message });
-        }
-        return res.status(500).json({ message: " something went very wrong" });
-      });
+      .then((videogames) => res.status(200).json(videogames))
+      .catch((err: any) => this.handleError(err, res));
   };
 
   getVideogamesById = (req: Request, res: Response) => {
@@ -45,16 +37,8 @@ export class VideogamesController {
     }
     this.videogameService
       .findOneVideogamesById(+id)
-      .then((videogame) => {
-        return res.status(200).json(videogame);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        if (err instanceof CatchError) {
-          return res.status(err.statusCode).json({ messsage: err.message });
-        }
-        return res.status(500).json({ message: " something went very wrong" });
-      });
+      .then((videogame) => res.status(200).json(videogame))
+      .catch((err: any) => this.handleError(err, res));
   };
 
   patchVideogame = (req: Request, res: Response) => {
@@ -66,16 +50,8 @@ export class VideogamesController {
     }
     this.videogameService
       .updateVideogamesById({ name, price, description }, +id)
-      .then((videogame) => {
-        return res.status(200).json(videogame);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        if (err instanceof CatchError) {
-          return res.status(err.statusCode).json({ messsage: err.message });
-        }
-        return res.status(500).json({ message: " something went very wrong" });
-      });
+      .then((videogame) => res.status(200).json(videogame))
+      .catch((err: any) => this.handleError(err, res));
   };
 
   deleteVideogame = (req: Request, res: Response) => {
@@ -86,14 +62,7 @@ export class VideogamesController {
 
     this.videogameService
       .deleteVideogames(+id)
-      .then(() => {
-        return res.status(204).json();
-      })
-      .catch((err: any) => {
-        if (err instanceof CatchError) {
-          return res.status(err.statusCode).json({ messsage: err.message });
-        }
-        return res.status(500).json({ message: " something went very wrong" });
-      });
+      .then(() => res.status(204).json())
+      .catch((err: any) => this.handleError(err, res));
   };
 }
