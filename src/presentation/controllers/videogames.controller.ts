@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { VideoGamesServices } from "../services/videoGames.Services";
-import { CatchError } from "../../domain";
+import { CatchError, CreateVideogameDto } from "../../domain";
 
 export class VideogamesController {
   constructor(public readonly videogameService: VideoGamesServices) {}
@@ -14,10 +14,11 @@ export class VideogamesController {
   };
 
   createVideogames = (req: Request, res: Response) => {
-    const { name, price, description } = req.body;
+    const [error, createVideogameDto] = CreateVideogameDto.create(req.body);
+    if (error) return res.status(422).json({ message: error });
 
     this.videogameService
-      .createVideoGame({ name, price, description })
+      .createVideoGame(createVideogameDto!)
       .then((videogame) => res.status(201).json(videogame))
       .catch((err: any) => this.handleError(err, res));
   };

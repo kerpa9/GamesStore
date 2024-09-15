@@ -1,4 +1,5 @@
 import { VideoGameModel } from "../../data";
+import { CreateVideogameDto } from "../../domain";
 import { CatchError } from "../../domain/errors/custom.erros";
 
 enum Status {
@@ -10,14 +11,14 @@ export class VideoGamesServices {
   constructor() {}
 
   /**
-   *Descripción del metodo create para un videojuego
+   *@Descripción del metodo create para un videojuego
    *@title: title desde el req.body
    *@description: description desde el req.body
    *@price: price desde el req.bosy
    *@returns: Retorna el guardado de la información
    */
 
-  async createVideoGame(videogameData: any) {
+  async createVideoGame(videogameData: CreateVideogameDto) {
     // Services
     // 1. Obtener los datos desde el body
     // 2. Crear el videojuego
@@ -47,7 +48,7 @@ export class VideoGamesServices {
   }
 
   /**
-   *Descripción del metodo find one para un videojuego
+   *@Descripción del metodo find one para un videojuego
    *@param id: id del videojuego que se quiere buscar
    *@returns: Retorna el videojuego con el id indicado
    */
@@ -63,7 +64,7 @@ export class VideoGamesServices {
   }
 
   /**
-   *Descripción del metodo find one para un videojuego
+   *@Descripción del metodo find one para un videojuego
    *@param id: id del videojuego que se quiere buscar
    *@returns: Retorna el videojuego con el id indicado
    */
@@ -83,7 +84,7 @@ export class VideoGamesServices {
   }
 
   /**
-   *Descripción del metodo delete para un videojuego
+   *@Descripción del metodo delete para un videojuego
    *@param id: id del videojuego que se quiere eliminar
    *@returns: Retorna un promesa vacía
    */
