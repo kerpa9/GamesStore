@@ -8,13 +8,18 @@ export class RegisterDTO {
     public readonly password: string
   ) {}
 
-  static register(object: { [key: string]: any }): [string?, RegisterDTO?] {
+  static create(object: { [key: string]: any }): [string?, RegisterDTO?] {
     const { first_name, last_name, email, password } = object;
 
     if (!first_name) return ["Missing firstname"];
     if (!last_name) return ["Missing lastname"];
-    if (!email && !regularExps.email.test(email)) return ["Invalid email"];
-    if (!password && !regularExps.password.test(password))
+    if (!email) return ["Invalid email"];
+    if (!regularExps.email.test(email)) return ["Invalid email"];
+    if (!password)
+      return [
+        "Password is missing or not accepted if its length is less than ten characters.",
+      ];
+    if (!regularExps.password.test(password))
       return [
         "Password is missing or not accepted if its length is less than ten characters.",
       ];

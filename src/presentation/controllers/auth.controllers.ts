@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CatchError } from "../../domain";
 import { AuthService } from "../services/auth.services";
+import { RegisterDTO } from "../../domain/dtos/auth/registerUser.DTO";
 
 export class AuthController {
   constructor(public readonly authServices: AuthService) {}
@@ -13,7 +14,13 @@ export class AuthController {
   };
 
   register = async (req: Request, res: Response) => {
-    return res.status(200).json({ message: "Register" });
+    const [error, registerDTO] = RegisterDTO.create(req.body);
+    if (error) return res.status(422).json({ message: error });
+
+    this.authServices
+      .register(registerDTO!)
+      .then((data) => res.status(200).json(data))
+      .catch((err: any) => this.handleError(err, res));
   };
 
   login = async (req: Request, res: Response) => {

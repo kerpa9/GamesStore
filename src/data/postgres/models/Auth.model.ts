@@ -53,6 +53,7 @@ export class AuthModel extends BaseEntity {
     type: "enum",
     nullable: false,
     enum: Role,
+    default: Role.CLIENT,
   })
   role: Role;
 
