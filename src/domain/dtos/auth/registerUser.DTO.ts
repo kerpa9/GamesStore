@@ -1,18 +1,24 @@
+import { regularExps } from "../../../config";
+
 export class RegisterDTO {
   private constructor(
+    public readonly first_name: string,
+    public readonly last_name: string,
     public readonly email: string,
     public readonly password: string
   ) {}
 
   static register(object: { [key: string]: any }): [string?, RegisterDTO?] {
-    const { email, password } = object;
+    const { first_name, last_name, email, password } = object;
 
-    if (!email) return ["Missing name"];
-    if (!password || password.length < 10)
+    if (!first_name) return ["Missing firstname"];
+    if (!last_name) return ["Missing lastname"];
+    if (!email && !regularExps.email.test(email)) return ["Invalid email"];
+    if (!password && !regularExps.password.test(password))
       return [
-        "Description is missing or not accepted if its length is less than ten characters.",
+        "Password is missing or not accepted if its length is less than ten characters.",
       ];
 
-    return [undefined, new RegisterDTO(email, password)];
+    return [undefined, new RegisterDTO(first_name, last_name, email, password)];
   }
 }

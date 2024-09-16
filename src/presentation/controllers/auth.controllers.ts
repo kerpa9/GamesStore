@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { CatchError } from "../../domain";
+import { AuthService } from "../services/auth.services";
 
 export class AuthController {
-  constructor() {}
+  constructor(public readonly authServices: AuthService) {}
 
   private handleError = (err: unknown, res: Response) => {
     if (err instanceof CatchError)
