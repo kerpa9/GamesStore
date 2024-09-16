@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { VideogamesRoutes } from "./routeVideogames";
+import { AuthRoutes } from "./routeAuth";
 
 export class AppRoutes {
   static get routes(): Router {
@@ -7,6 +8,7 @@ export class AppRoutes {
 
     //Rutas para videogames
     router.use("/videogames", VideogamesRoutes.routesGames);
+    router.use("/auth", AuthRoutes.routesAuth);
 
     //Rutas para users
     // router.use();

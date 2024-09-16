@@ -6,7 +6,7 @@ export class CreateVideogameDto {
   ) {}
 
   /**
-   * @description este método valuda los datos para crear un videojuego
+   * @description este método valida los datos para crear un videojuego
    * @param object este objeto es el que recibimos de el cliente
    * @returns un arreglo con el mensaje de error y el objeto de tipo CreateVideogameDto
    */

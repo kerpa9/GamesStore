@@ -1,9 +1,9 @@
 import {
   BaseEntity,
-  Column,
-  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
 
@@ -12,33 +12,49 @@ enum Status {
   INACTIVE = "INACTIVE",
 }
 
+enum Role {
+  ADMIN = "ADMIN",
+  CLIENT = "CLIENT",
+}
+
 @Entity()
-export class VideoGameModel extends BaseEntity {
+export class AuthModel extends BaseEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
   @Column({
-    unique: true,
+    type: "varchar",
+    length: 60,
     nullable: false,
+  })
+  first_name: string;
+
+  @Column({
+    type: "varchar",
+    length: 60,
+    nullable: false,
+  })
+  last_name: string;
+
+  @Column({
+    type: "varchar",
     length: 100,
-  })
-  title: string;
-
-  @Column({
     nullable: false,
-    type: "text",
   })
-  description: string;
+  email: string;
 
   @Column({
-    nullable: true,
+    type: "varchar",
     length: 255,
-  })
-  image: string;
-
-  @Column({
     nullable: false,
   })
-  price: number;
+  password: string;
+
+  @Column({
+    type: "enum",
+    nullable: false,
+    enum: Role,
+  })
+  role: Role;
 
   @Column({
     type: "enum",
