@@ -8,4 +8,5 @@ export const envs = {
   DATABASE_USERNAME: get("DATABASE_USERNAME").required().asString(),
   DATABASE_PASSWORD: get("DATABASE_PASSWORD").required().asString(),
   DATABASE_DATABASE: get("DATABASE_DATABASE").required().asString(),
+  JWT_SEED: get("JWT_SEED").required().asString(),
 };
