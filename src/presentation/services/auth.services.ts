@@ -3,6 +3,7 @@ import { JwtAdapter } from "../../config/jwtAdapter";
 import { AuthModel } from "../../data/postgres/models/Auth.model";
 import { CatchError } from "../../domain";
 import { RegisterDTO } from "../../domain/dtos/auth/registerUser.DTO";
+import { EmailService } from "./emailValidate.services";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -15,7 +16,7 @@ enum Role {
 }
 
 export class AuthService {
-  constructor() {}
+  constructor(private readonly emailServices: EmailService) {}
 
   public async register(registerDTO: RegisterDTO) {
     const existUser = await AuthModel.findOne({
