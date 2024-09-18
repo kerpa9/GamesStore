@@ -18,6 +18,7 @@ export class AuthRoutes {
     const authController = new AuthController(authService);
     router.post("/login", authController.login);
     router.post("/register", authController.register);
+    router.get("/validate-email/:token", authController.validateEmail);
     return router;
   }
 }

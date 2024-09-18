@@ -26,4 +26,13 @@ export class AuthController {
   login = async (req: Request, res: Response) => {
     return res.status(200).json({ message: "login" });
   };
+
+  validateEmail = async (req: Request, res: Response) => {
+    const { token } = req.params;
+
+    this.authServices
+      .validateEmail(token)
+      .then(() => res.json("Email was validated properly"))
+      .catch((error) => this.handleError(error, res));
+  };
 }

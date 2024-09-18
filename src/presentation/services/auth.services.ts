@@ -1,4 +1,3 @@
-import { Subject } from "typeorm/persistence/Subject";
 import { bcryptAdapter, envs } from "../../config";
 import { JwtAdapter } from "../../config/jwtAdapter";
 import { AuthModel } from "../../data/postgres/models/Auth.model";
@@ -34,6 +33,7 @@ export class AuthService {
 
     try {
       await user.save();
+      await this.sendEmailValidate(user.email);
       const token = await JwtAdapter.generateToken({ id: user.id });
       if (!token) throw CatchError.internalServer("Error while creating JWT");
       return {
@@ -53,7 +53,7 @@ export class AuthService {
     const link = `${envs.WEBSERVICE_URL}/auth/validate-email/${token}`;
 
     const html = `
-      <h1>Validate tour email</h1>
+      <h1>Validate your email</h1>
       <p>Click on the following link to validate your email</p>
       <a href="${link}">Validate tour email : ${email}</a>
     `;
@@ -68,7 +68,28 @@ export class AuthService {
     return true;
   };
 
-  public validateEmail = async () => {};
+  public validateEmail = async (token: string) => {
+    const payload = await JwtAdapter.validateToken(token);
+
+    if (!payload) throw CatchError.unAuthorized("Invalid Token");
+
+    const { email } = payload as { email: string };
+
+    if (!email) throw CatchError.internalServer("Email not in token");
+
+    const user = await AuthModel.findOne({ where: { email } });
+
+    if (!user) throw CatchError.internalServer("Email not exist");
+
+    user.emailValidated = true;
+
+    try {
+      await user.save();
+      return true;
+    } catch (error) {
+      throw CatchError.internalServer("Something went very wrong");
+    }
+  };
 
   public async login(registerDTO: RegisterDTO) {}
 }

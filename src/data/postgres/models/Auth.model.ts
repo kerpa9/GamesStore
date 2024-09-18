@@ -5,11 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  AfterInsert,
-  InsertEvent,
-  BeforeInsert,
 } from "typeorm";
-import { bcryptAdapter } from "../../../config";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -69,6 +65,11 @@ export class AuthModel extends BaseEntity {
   })
   status: Status;
 
+  @Column({
+    type: "boolean",
+    default: false,
+  })
+  emailValidated: boolean;
   @CreateDateColumn()
   created_at: Date;
   @UpdateDateColumn()
