@@ -11,7 +11,8 @@ export class AuthRoutes {
     const emailValidate = new EmailService(
       envs.MAILER_SERVICE,
       envs.MAILER_EMAIL,
-      envs.MAILER_SECRET_KEY
+      envs.MAILER_SECRET_KEY,
+      envs.SEND_EMAIL
     );
     const authService = new AuthService(emailValidate);
     const authController = new AuthController(authService);

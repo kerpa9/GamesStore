@@ -1,4 +1,5 @@
-import { bcryptAdapter } from "../../config";
+import { Subject } from "typeorm/persistence/Subject";
+import { bcryptAdapter, envs } from "../../config";
 import { JwtAdapter } from "../../config/jwtAdapter";
 import { AuthModel } from "../../data/postgres/models/Auth.model";
 import { CatchError } from "../../domain";
@@ -43,6 +44,31 @@ export class AuthService {
       throw CatchError.internalServer(err);
     }
   }
+
+  public sendEmailValidate = async (email: string) => {
+    const token = await JwtAdapter.generateToken({ email });
+
+    if (!token) throw CatchError.internalServer("Error getting token");
+
+    const link = `${envs.WEBSERVICE_URL}/auth/validate-email/${token}`;
+
+    const html = `
+      <h1>Validate tour email</h1>
+      <p>Click on the following link to validate your email</p>
+      <a href="${link}">Validate tour email : ${email}</a>
+    `;
+
+    const isSent = this.emailServices.sendEmail({
+      to: email,
+      subject: "validate your email",
+      htmlBody: html,
+    });
+
+    if (!isSent) throw CatchError.internalServer("Error sending email");
+    return true;
+  };
+
+  public validateEmail = async () => {};
 
   public async login(registerDTO: RegisterDTO) {}
 }
