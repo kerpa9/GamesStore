@@ -1,4 +1,5 @@
 import { bcryptAdapter } from "../../config";
+import { JwtAdapter } from "../../config/jwtAdapter";
 import { AuthModel } from "../../data/postgres/models/Auth.model";
 import { CatchError } from "../../domain";
 import { RegisterDTO } from "../../domain/dtos/auth/registerUser.DTO";
@@ -30,7 +31,13 @@ export class AuthService {
     user.password = bcryptAdapter.hash(registerDTO.password);
 
     try {
-      return await user.save();
+      await user.save();
+      const token = await JwtAdapter.generateToken({ id: user.id });
+      if (!token) throw CatchError.internalServer("Error while creating JWT");
+      return {
+        token,
+        user,
+      };
     } catch (err: any) {
       throw CatchError.internalServer(err);
     }
