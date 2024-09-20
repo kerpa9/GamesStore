@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CatchError } from "../../domain";
 import { AuthService } from "../services/auth.services";
 import { RegisterDTO } from "../../domain/dtos/auth/registerUser.DTO";
+import { LoginDTO } from "../../domain/dtos/auth/loginUser.DTO";
 
 export class AuthController {
   constructor(public readonly authServices: AuthService) {}
@@ -24,7 +25,12 @@ export class AuthController {
   };
 
   login = async (req: Request, res: Response) => {
-    return res.status(200).json({ message: "login" });
+    const [error, loginUserDTO] = LoginDTO.create(req.body);
+    if (error) return res.status(422).json({ message: error });
+    this.authServices
+      .login(loginUserDTO!)
+      .then((data) => res.status(200).json(data))
+      .catch((error) => this.handleError(error, res));
   };
 
   validateEmail = async (req: Request, res: Response) => {

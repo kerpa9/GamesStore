@@ -1,7 +1,9 @@
+import { ReturningStatementNotSupportedError } from "typeorm";
 import { bcryptAdapter, envs } from "../../config";
 import { JwtAdapter } from "../../config/jwtAdapter";
 import { AuthModel } from "../../data/postgres/models/Auth.model";
 import { CatchError } from "../../domain";
+import { LoginDTO } from "../../domain/dtos/auth/loginUser.DTO";
 import { RegisterDTO } from "../../domain/dtos/auth/registerUser.DTO";
 import { EmailService } from "./emailValidate.services";
 
@@ -91,5 +93,28 @@ export class AuthService {
     }
   };
 
-  public async login(registerDTO: RegisterDTO) {}
+  public async login(loginDTO: LoginDTO) {
+    const user = await AuthModel.findOne({
+      where: { email: loginDTO.email, status: Status.ACTIVE },
+    });
+    if (!user) throw CatchError.unAuthorized("Invalid credentials");
+
+    const isMatching = bcryptAdapter.compare(loginDTO.password, user.password);
+
+    if (!isMatching) throw CatchError.unAuthorized("Invalid credentials");
+
+    const token = await JwtAdapter.generateToken({ id: user.id });
+
+    if (!token) throw CatchError.internalServer("Error while creating JWT");
+    return {
+      token: token,
+      user: {
+        id: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        role: user.role,
+      },
+    };
+  }
 }
