@@ -117,4 +117,14 @@ export class AuthService {
       },
     };
   }
+
+  public async getProfile(id: number) {
+    const logged = await AuthModel.findOne({
+      where: { id, status: Status.ACTIVE },
+    });
+
+    if (!logged) throw CatchError.notFound(`This ${id} not found`);
+
+    return logged;
+  }
 }

@@ -28,7 +28,7 @@ export class AuthMiddleware {
       const payload = await JwtAdapter.validateToken<{ id: number }>(token);
 
       if (!payload) return res.status(401).json({ message: "Invalid token" });
-      console.log(payload);
+      // console.logs(payload);
 
       const user = await AuthModel.findOne({
         where: {
@@ -39,6 +39,8 @@ export class AuthMiddleware {
       });
 
       if (!user) return res.status(401).json({ message: "Invalid user" });
+
+      req.body.sesionUser = user;
       next();
     } catch (err) {
       return res.status(500).json({ message: "Internal server error" });

@@ -41,4 +41,13 @@ export class AuthController {
       .then(() => res.json("Email was validated properly"))
       .catch((error) => this.handleError(error, res));
   };
+
+  getProfileLogged = async (req: Request, res: Response) => {
+    const { id } = req.body.sesionUser;
+
+    this.authServices
+      .getProfile(+id)
+      .then((data) => res.status(200).json(data))
+      .catch((error) => this.handleError(error, res));
+  };
 }

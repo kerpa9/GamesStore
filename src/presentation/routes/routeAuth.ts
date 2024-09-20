@@ -3,6 +3,7 @@ import { AuthController } from "../controllers/auth.controllers";
 import { AuthService } from "../services/auth.services";
 import { EmailService } from "../services/emailValidate.services";
 import { envs } from "../../config";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 export class AuthRoutes {
   static get routesAuth(): Router {
@@ -19,6 +20,12 @@ export class AuthRoutes {
     router.post("/login", authController.login);
     router.post("/register", authController.register);
     router.get("/validate-email/:token", authController.validateEmail);
+
+    router.get(
+      "/profile",
+      AuthMiddleware.protect,
+      authController.getProfileLogged
+    );
     return router;
   }
 }
