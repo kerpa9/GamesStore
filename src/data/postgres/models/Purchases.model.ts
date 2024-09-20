@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 enum Status {
@@ -16,15 +17,13 @@ export class PurchasesModel extends BaseEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
   @Column({
-    type: "number",
-    unique: true,
+    type: "int",
     nullable: false,
   })
-  auth_id: number;
+  user_id: number;
 
   @Column({
-    type: "number",
-    unique: true,
+    type: "int",
     nullable: false,
   })
   videogame_id: number;
@@ -38,5 +37,8 @@ export class PurchasesModel extends BaseEntity {
   status: Status;
 
   @CreateDateColumn()
-  purchases_date: Date;
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

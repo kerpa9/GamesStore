@@ -5,7 +5,9 @@ export class PurchasesRoute {
   static get routePurchase(): Router {
     const routePurchase = Router();
 
-    routePurchase.get("/", PurchasesController.getPurchases);
+    const purchaseControler = new PurchasesController();
+
+    routePurchase.get("/", purchaseControler.getPurchases);
 
     return routePurchase;
   }
