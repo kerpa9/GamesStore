@@ -1,8 +1,5 @@
 export class CreatePurchasesDTO {
-  private constructor(
-    private readonly userId: number,
-    private readonly videogameId: number
-  ) {}
+  private constructor(readonly userId: number, readonly videogameId: number) {}
 
   static create(object: {
     [key: string]: any;

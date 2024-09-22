@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { CatchError } from "../../domain";
 import { CreatePurchasesDTO } from "../../domain/dtos/purchases/create.Purchases";
+import { PurchaseServices } from "../services/purchases.services";
+import { error } from "console";
 
 export class PurchasesController {
-  constructor() {}
+  constructor(private readonly purchasesSevices: PurchaseServices) {}
 
   private handleError = (error: unknown, res: Response) => {
     if (error instanceof CatchError)
@@ -14,15 +16,40 @@ export class PurchasesController {
   };
 
   createPurchases = (req: Request, res: Response) => {
-    const [error, createPurchases] = CreatePurchasesDTO.create(req.body);
+    const [error, createPurchasesDTO] = CreatePurchasesDTO.create(req.body);
     if (error) return res.status(422).json({ message: error });
+
+    this.purchasesSevices
+      .createPurchases(createPurchasesDTO!)
+      .then((purchase) => res.status(201).json(purchase))
+      .catch((error) => this.handleError(error, res));
   };
 
-  getPurchasesById = (req: Request, res: Response) => {};
-  updatePurchases = (req: Request, res: Response) => {};
-  deletePurchases = (req: Request, res: Response) => {};
-
   getPurchases = (req: Request, res: Response) => {
-    return res.status(200).json({ message: "Ejecución get " });
+    this.purchasesSevices
+      .findAllPurchases()
+      .then((purchase) => res.status(200).json(purchase))
+      .catch((error) => this.handleError(error, res));
+  };
+
+  getPurchasesById = (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (isNaN(+id))
+      return res.status(400).json({ message: `This ${id} isn't at number` });
+    this.purchasesSevices
+      .findOnePurchases(+id)
+      .then((purchase) => res.status(200).json(purchase))
+      .catch((error) => this.handleError(error, res));
+  };
+
+  // updatePurchases = (req: Request, res: Response) => {};
+  deletePurchases = (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (isNaN(+id))
+      return res.status(400).json({ message: `This ${id} isn't at number` });
+    this.purchasesSevices
+      .deletePurchases(+id)
+      .then(() => res.status(200).json(null))
+      .catch((error) => this.handleError(error, res));
   };
 }
