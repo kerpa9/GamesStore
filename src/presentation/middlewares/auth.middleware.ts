@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtAdapter } from "../../config/jwtAdapter";
 import { AuthModel } from "../../data/postgres/models/Auth.model";
-import { ReturningStatementNotSupportedError } from "typeorm";
 
 enum Status {
   ACTIVE = "ACTIVE",

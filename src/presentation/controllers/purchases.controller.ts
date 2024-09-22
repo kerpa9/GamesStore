@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { CatchError } from "../../domain";
 import { CreatePurchasesDTO } from "../../domain/dtos/purchases/create.Purchases";
 import { PurchaseServices } from "../services/purchases.services";
-import { error } from "console";
 
 export class PurchasesController {
   constructor(private readonly purchasesSevices: PurchaseServices) {}
@@ -44,11 +43,12 @@ export class PurchasesController {
 
   // updatePurchases = (req: Request, res: Response) => {};
   deletePurchases = (req: Request, res: Response) => {
+    const userId = req.body.sesionUser.id;
     const { id } = req.params;
     if (isNaN(+id))
       return res.status(400).json({ message: `This ${id} isn't at number` });
     this.purchasesSevices
-      .deletePurchases(+id)
+      .deletePurchases(+id, userId)
       .then(() => res.status(200).json(null))
       .catch((error) => this.handleError(error, res));
   };

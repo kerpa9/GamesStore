@@ -1,3 +1,4 @@
+import { protectAccountOwner } from "../../config/validateOwner";
 import { PurchasesModel } from "../../data/postgres/models/Purchases.model";
 import { CatchError } from "../../domain";
 import { CreatePurchasesDTO } from "../../domain/dtos/purchases/create.Purchases";
@@ -59,14 +60,18 @@ export class PurchaseServices {
     return purchase;
   }
 
-  async deletePurchases(id: number) {
+  async deletePurchases(id: number, userSessionId: number) {
     const purchase = await this.findOnePurchases(id);
+
+    const isOwner = protectAccountOwner(purchase.user_id, userSessionId);
+    if (!isOwner)
+      throw CatchError.unAuthorized("You are not owner of this purchase");
 
     purchase.status = Status.INACTIVE;
     try {
       await purchase.save();
     } catch (error) {
-      throw CatchError.internalServer("Somethin went very wrong!");
+      throw CatchError.internalServer("Something went very wrong!");
     }
   }
 }
