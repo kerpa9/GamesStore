@@ -5,7 +5,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from "typeorm";
+import { bcryptAdapter } from "../../../config";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -74,9 +76,10 @@ export class AuthModel extends BaseEntity {
   created_at: Date;
   @UpdateDateColumn()
   updated_at: Date;
-  // @BeforeInsert()
-  // encryptPassword(event: InsertEvent<any>) {
-  //   console.log(event);
-  //   // this.password=bcryptAdapter.hash()
-  // }
+
+  //Use the trigger to encrypt the password before inserting it into the database
+  @BeforeInsert()
+  encryptPassword() {
+    this.password = bcryptAdapter.hash(this.password);
+  }
 }

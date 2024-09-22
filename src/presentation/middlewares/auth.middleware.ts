@@ -45,7 +45,16 @@ export class AuthMiddleware {
     } catch (err) {
       return res.status(500).json({ message: "Internal server error" });
     }
-
-    console.log(token);
   }
+
+  static validateRestricRole = (...roles: any) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+      if (!roles.includes(req.body.sesionUser.role)) {
+        return res
+          .status(403)
+          .json({ message: "You are not authorizes to access this route" });
+      }
+      next();
+    };
+  };
 }
