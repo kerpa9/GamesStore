@@ -1,5 +1,4 @@
 import { envs } from "./config/envs";
-import { PostgresDatabase } from "./data";
 import { AppRoutes } from "./presentation/routes/indexRoute";
 import { Server } from "./presentation/server";
 // import "reflect-metadata";
@@ -9,18 +8,6 @@ import { Server } from "./presentation/server";
 })();
 
 async function main() {
-  //Connection or Database
-  // postgresql: //videogamedb_owner:erDQlxM4fLc3@ep-tight-resonance-a5lg2m37.us-east-2.aws.neon.tech/videogamedb?sslmode=require
-
-  const postgres = new PostgresDatabase({
-    host: envs.DATABASE_HOST,
-    port: envs.DATABASE_PORT,
-    username: envs.DATABASE_USERNAME,
-    password: envs.DATABASE_PASSWORD,
-    database: envs.DATABASE_DATABASE,
-  });
-
-  await postgres.connect();
   const server = new Server({
     port: envs.PORT,
     routes: AppRoutes.routes,
