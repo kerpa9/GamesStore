@@ -121,6 +121,13 @@ export class AuthService {
   public async getProfile(id: number) {
     const logged = await AuthModel.findOne({
       where: { id, status: Status.ACTIVE },
+      relations: ["purchases"],
+      select: {
+        purchases: {
+          status: true,
+          id: true,
+        },
+      },
     });
 
     if (!logged) throw CatchError.notFound(`This ${id} not found`);

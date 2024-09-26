@@ -6,8 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from "typeorm";
 import { bcryptAdapter } from "../../../config";
+import { PurchasesModel } from "./Purchases.model";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -72,6 +74,13 @@ export class AuthModel extends BaseEntity {
     default: false,
   })
   emailValidated: boolean;
+
+  // Relations
+
+  @OneToMany(() => PurchasesModel, (purchase) => purchase.user)
+  // @JoinColumn({ name })
+  purchases: PurchasesModel[];
+
   @CreateDateColumn()
   created_at: Date;
   @UpdateDateColumn()

@@ -23,13 +23,16 @@ export class PurchaseServices {
 
     const userPromise = this.authService.getProfile(purchasesData.userId);
 
-    await Promise.all([videogamePromise, userPromise]);
+    const [videogame, user] = await Promise.all([
+      videogamePromise,
+      userPromise,
+    ]);
 
     const purchase = new PurchasesModel();
 
-    purchase.user_id = purchasesData.userId;
+    purchase.user = user;
 
-    purchase.videogame_id = purchasesData.videogameId;
+    purchase.videogame = videogame;
 
     try {
       return await purchase.save();
@@ -55,6 +58,22 @@ export class PurchaseServices {
         id,
         status: Status.ACTIVE,
       },
+      relations: ["user", "videogame"],
+      select: {
+        user: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          email: true,
+          role: true,
+        },
+        videogame: {
+          id: true,
+          title: true,
+          description: true,
+          price: true,
+        },
+      },
     });
     if (!purchase) throw CatchError.notFound("Purchase not found");
     return purchase;
@@ -62,14 +81,13 @@ export class PurchaseServices {
 
   async deletePurchases(id: number, userSessionId: number) {
     const purchase = await this.findOnePurchases(id);
-
-    const isOwner = protectAccountOwner(purchase.user_id, userSessionId);
+    // console.log(purchase);
+    const isOwner = protectAccountOwner(purchase.user.id, userSessionId);
     if (!isOwner)
       throw CatchError.unAuthorized("You are not owner of this purchase");
-
     purchase.status = Status.INACTIVE;
     try {
-      await purchase.save();
+      return await purchase.save();
     } catch (error) {
       throw CatchError.internalServer("Something went very wrong!");
     }

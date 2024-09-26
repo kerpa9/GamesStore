@@ -1,6 +1,9 @@
 import express, { Router } from "express";
 import cors from "cors";
 import helmet from "helmet";
+import hpp from "hpp";
+// import helmet from "helmet";
+// import hpp from "hpp";
 
 interface Options {
   port: number;
@@ -24,6 +27,7 @@ export class Server {
     this.app.use(express.json()); //Control of data for response in JSON
     this.app.use(express.urlencoded({ extended: true })); //Control of data for response in urlencoded
 
+    this.app.use("/api/v1", this.routes);
     this.app.use(
       cors({
         origin: (origin, callback) => {
@@ -37,10 +41,9 @@ export class Server {
         },
       })
     );
-
+    // Security DoS
     this.app.use(helmet());
-
-    this.app.use("/api/v1", this.routes);
+    this.app.use(hpp());
 
     this.app.listen(this.port, () => {
       console.log(

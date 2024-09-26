@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { AuthModel } from "./Auth.model";
+import { VideoGameModel } from "./Videogame.model";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -16,17 +19,6 @@ enum Status {
 export class PurchasesModel extends BaseEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
-  @Column({
-    type: "int",
-    nullable: false,
-  })
-  user_id: number;
-
-  @Column({
-    type: "int",
-    nullable: false,
-  })
-  videogame_id: number;
 
   @Column({
     type: "enum",
@@ -35,6 +27,14 @@ export class PurchasesModel extends BaseEntity {
     default: Status.ACTIVE,
   })
   status: Status;
+
+  // Relations
+
+  @ManyToOne(() => AuthModel, (user) => user.purchases)
+  user: AuthModel;
+
+  @ManyToOne(() => VideoGameModel, (videogame) => videogame.purchases)
+  videogame: VideoGameModel;
 
   @CreateDateColumn()
   created_at: Date;
