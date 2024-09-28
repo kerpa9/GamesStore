@@ -4,6 +4,7 @@ import { AuthService } from "../services/auth.services";
 import { EmailService } from "../services/emailValidate.services";
 import { envs } from "../../config";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { uploadSingle } from "../../config/uploadFilesAdapter";
 
 export class AuthRoutes {
   static get routesAuth(): Router {
@@ -18,7 +19,7 @@ export class AuthRoutes {
     const authService = new AuthService(emailValidate);
     const authController = new AuthController(authService);
     router.post("/login", authController.login);
-    router.post("/register", authController.register);
+    router.post("/register", uploadSingle("avatar"), authController.register);
     router.get("/validate-email/:token", authController.validateEmail);
 
     router.get(
@@ -29,3 +30,5 @@ export class AuthRoutes {
     return router;
   }
 }
+
+

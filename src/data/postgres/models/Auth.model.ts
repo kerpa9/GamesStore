@@ -62,6 +62,12 @@ export class AuthModel extends BaseEntity {
   role: Role;
 
   @Column({
+    type: "varchar",
+    default: "https://cdn-icons-png.flaticon.com/256/17/17004.png",
+  })
+  avatar: string;
+
+  @Column({
     type: "enum",
     nullable: false,
     enum: Status,

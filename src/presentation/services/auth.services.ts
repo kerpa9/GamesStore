@@ -20,7 +20,10 @@ enum Role {
 export class AuthService {
   constructor(private readonly emailServices: EmailService) {}
 
-  public async register(registerDTO: RegisterDTO) {
+  public async register(
+    registerDTO: RegisterDTO,
+    file: Express.Multer.File | undefined
+  ) {
     const existUser = await AuthModel.findOne({
       where: { status: Status.ACTIVE, email: registerDTO.email },
     });
