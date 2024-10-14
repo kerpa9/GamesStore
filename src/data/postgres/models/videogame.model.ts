@@ -50,6 +50,12 @@ export class VideoGameModel extends BaseEntity {
   })
   status: Status;
 
+  @Column({
+    type: "varchar",
+    array: true,
+  })
+  imgs: string[];
+
   @OneToMany(() => PurchasesModel, (purchases) => purchases.videogame)
   purchases: PurchasesModel[];
 

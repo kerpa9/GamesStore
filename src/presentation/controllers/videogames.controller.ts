@@ -22,7 +22,7 @@ export class VideogamesController {
     if (error) return res.status(422).json({ message: error });
 
     this.videogameService
-      .createVideoGame(createVideogameDto!)
+      .createVideoGame(createVideogameDto!, req.files as Express.Multer.File[])
       .then((videogame) => res.status(201).json(videogame))
       .catch((err: any) => this.handleError(err, res));
   };

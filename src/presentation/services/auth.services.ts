@@ -6,6 +6,8 @@ import { CatchError } from "../../domain";
 import { LoginDTO } from "../../domain/dtos/auth/loginUser.DTO";
 import { RegisterDTO } from "../../domain/dtos/auth/registerUser.DTO";
 import { EmailService } from "./emailValidate.services";
+import { generateUUID } from "../../config/generateIUU";
+import { UploadFile } from "../../config/uploadFilesCloudAdapter";
 
 enum Status {
   ACTIVE = "ACTIVE",
@@ -28,6 +30,8 @@ export class AuthService {
       where: { status: Status.ACTIVE, email: registerDTO.email },
     });
 
+    // Name folder
+
     if (existUser) throw CatchError.badRequest("Email already exist");
 
     const user = new AuthModel();
@@ -35,6 +39,12 @@ export class AuthService {
     user.last_name = registerDTO.last_name;
     user.email = registerDTO.email;
     user.password = registerDTO.password;
+
+    if (file?.originalname && file.originalname.length) {
+      const path = `user/${generateUUID()}-${file?.originalname}`;
+      const photoUrl = await UploadFile.uploadToCloud(path, file?.buffer);
+      user.avatar = photoUrl;
+    }
 
     try {
       await user.save();
