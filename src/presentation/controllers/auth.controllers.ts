@@ -16,6 +16,7 @@ export class AuthController {
 
   register = async (req: Request, res: Response) => {
     const [error, registerDTO] = RegisterDTO.create(req.body);
+
     if (error) return res.status(422).json({ message: error });
     // Validate tiping
     // console.log(req.file);

@@ -18,6 +18,7 @@ export class AuthRoutes {
     );
     const authService = new AuthService(emailValidate);
     const authController = new AuthController(authService);
+
     router.post("/login", authController.login);
     router.post("/register", uploadSingle("avatar"), authController.register);
     router.get("/validate-email/:token", authController.validateEmail);
@@ -30,5 +31,3 @@ export class AuthRoutes {
     return router;
   }
 }
-
-
